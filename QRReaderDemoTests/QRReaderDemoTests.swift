@@ -1,15 +1,15 @@
 //
-//  listaqrTests.swift
-//  listaqrTests
+//  QRReaderDemoTests.swift
+//  QRReaderDemoTests
 //
-//  Created by Mario Contreras on 9/16/15.
-//  Copyright (c) 2015 Mario Contreras. All rights reserved.
+//  Created by Simon Ng on 23/11/14.
+//  Copyright (c) 2014 AppCoda. All rights reserved.
 //
 
 import UIKit
 import XCTest
 
-class listaqrTests: XCTestCase {
+class QRReaderDemoTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

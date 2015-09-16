@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>listaqr.xcscheme</key>
+		<key>QRReaderDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,12 +12,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>CEBA74BA1BAA12CA00714587</key>
+		<key>F4973AAA1A21DD6D00E2F44E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CEBA74CF1BAA12CA00714587</key>
+		<key>F4973ABF1A21DD6E00E2F44E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

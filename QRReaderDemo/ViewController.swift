@@ -1,18 +1,22 @@
 //
 //  ViewController.swift
-//  listaqr
+//  QRReaderDemo
 //
-//  Created by Mario Contreras on 9/16/15.
-//  Copyright (c) 2015 Mario Contreras. All rights reserved.
+//  Created by Simon Ng on 23/11/14.
+//  Copyright (c) 2014 AppCoda. All rights reserved.
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var messageLabel:UILabel!
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
     }
 
     override func didReceiveMemoryWarning() {
