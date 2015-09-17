@@ -22,8 +22,13 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         //Parse test shit
-        let testObject = PFObject(className: "TestObject")
-        testObject["foo"] = "bar"
+        let testObject = PFObject(className: "alumno")
+        testObject["Nombre"] = "Carla Anabelle P"
+        testObject["Matricula"] = "759071"
+        testObject["Apellido_paterno"] = "Prieto"
+        testObject["Apellido_materno"] = "Chavez"
+        testObject["Carrera"] = "ITI11"
+        
         testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
             println("Object has been saved.")
         }
