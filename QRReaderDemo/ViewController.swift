@@ -18,15 +18,17 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     var qrCodeFrameView:UIView?
+    var lastData: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Parse test shit
+        //Parse  shit
         let testObject = PFObject(className: "alumno")
         testObject["Nombre"] = "Carla Anabelle P"
         testObject["Matricula"] = "759071"
         testObject["Apellido_paterno"] = "Prieto"
         testObject["Apellido_materno"] = "Chavez"
+        testObject["Carrera"] = "ITI11"
         testObject["Carrera"] = "ITI11"
         
         testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
@@ -87,20 +89,40 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects == nil || metadataObjects.count == 0 {
             qrCodeFrameView?.frame = CGRectZero
-            messageLabel.text = "Coloque el codigo QR en el marco azul"
+            messageLabel.text = "Enfoque el codigo QR"
             return
         }
         
         // Get the metadata object.
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        var metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
         
         if metadataObj.type == AVMetadataObjectTypeQRCode {
             // If the found metadata is equal to the QR code metadata then update the status label's text and set the bounds
-            let barCodeObject = videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
-            qrCodeFrameView?.frame = barCodeObject.bounds
             
-            if metadataObj.stringValue != nil {
-                messageLabel.text = "Asistencia de "+metadataObj.stringValue.componentsSeparatedByString(",")[1]+" registrada"
+            if (metadataObj.stringValue != nil && metadataObj.stringValue != lastData) {
+                lastData = metadataObj.stringValue
+                let datosDelAlumno: [String] = metadataObj.stringValue.componentsSeparatedByString(",")
+                let asistenteObject = PFObject(className: "alumno")
+                asistenteObject["Matricula"] = datosDelAlumno[0]
+                asistenteObject["Nombre"] = datosDelAlumno[1]
+                asistenteObject["Apellido_paterno"] = datosDelAlumno[2]
+                asistenteObject["Apellido_materno"] = datosDelAlumno[3]
+                asistenteObject["Carrera"] = datosDelAlumno[4]
+                asistenteObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+                    println("Object has been saved.")
+                    if success {
+                        let barCodeObject = self.videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
+                        self.qrCodeFrameView?.frame = barCodeObject.bounds
+                        self.messageLabel.text = "Asistencia de "+metadataObj.stringValue.componentsSeparatedByString(",")[1]+" registrada"
+                    }
+                    
+                }
+                if metadataObj.stringValue != lastData{
+                    let barCodeObject = self.videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
+                    self.qrCodeFrameView?.frame = barCodeObject.bounds
+                }
+
+                
             }
         }
     }
