@@ -22,18 +22,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Parse  shit
-        let testObject = PFObject(className: "alumno")
-        testObject["Nombre"] = "Carla Anabelle P"
-        testObject["Matricula"] = "759071"
-        testObject["Apellido_paterno"] = "Prieto"
-        testObject["Apellido_materno"] = "Chavez"
-        testObject["Carrera"] = "ITI11"
-        testObject["Carrera"] = "ITI11"
-        
-        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-            println("Object has been saved.")
-        }
+   
         
         // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video
         // as the media type parameter.
@@ -86,6 +75,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
         
+        
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects == nil || metadataObjects.count == 0 {
             qrCodeFrameView?.frame = CGRectZero
@@ -108,6 +98,9 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 asistenteObject["Apellido_paterno"] = datosDelAlumno[2]
                 asistenteObject["Apellido_materno"] = datosDelAlumno[3]
                 asistenteObject["Carrera"] = datosDelAlumno[4]
+                //Get todays date and time
+                let localdate = NSDate().dateByAddingTimeInterval(-21600)
+                asistenteObject["Fecha_hora"] = localdate
                 asistenteObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
                     println("Object has been saved.")
                     if success {
