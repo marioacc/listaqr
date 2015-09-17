@@ -168,7 +168,7 @@ NS_REQUIRES_PROPERTY_DEFINITIONS
 
  @see objectForKey:
  */
-- (PF_NULLABLE_S id)objectForKeyedSubscript:(NSString *)key;
+- (id)objectForKeyedSubscript:(NSString *)key;
 
 /*!
  @abstract Returns the value associated with a given key.

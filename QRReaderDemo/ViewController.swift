@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Parse
 
 class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
@@ -20,7 +21,12 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //Parse test shit
+        let testObject = PFObject(className: "TestObject")
+        testObject["foo"] = "bar"
+        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+            println("Object has been saved.")
+        }
         
         // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video
         // as the media type parameter.
