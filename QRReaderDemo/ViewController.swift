@@ -11,15 +11,17 @@ import AVFoundation
 
 class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
+    
+    
+    @IBOutlet weak var messageLabel:UILabel!
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     var qrCodeFrameView:UIView?
     
-    @IBOutlet weak var messageLabel:UILabel!
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video
         // as the media type parameter.
         let captureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
@@ -53,42 +55,49 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         videoPreviewLayer?.frame = view.layer.bounds
         view.layer.addSublayer(videoPreviewLayer)
         
-        // Start video capture.
-        captureSession?.startRunning()
+        
+        
         
         view.bringSubviewToFront(messageLabel)
-        
         qrCodeFrameView = UIView()
         qrCodeFrameView?.layer.borderColor = UIColor.blueColor().CGColor
-        qrCodeFrameView?.layer.borderWidth = 3
+        qrCodeFrameView?.layer.borderWidth = 4
         view.addSubview(qrCodeFrameView!)
         view.bringSubviewToFront(qrCodeFrameView!)
         
-        func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        // Start video capture.
+        captureSession?.startRunning()
+        
+    }
+    
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        
+        // Check if the metadataObjects array is not nil and it contains at least one object.
+        if metadataObjects == nil || metadataObjects.count == 0 {
+            qrCodeFrameView?.frame = CGRectZero
+            messageLabel.text = "Coloque el codigo QR en el marco azul"
+            return
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        if metadataObj.type == AVMetadataObjectTypeQRCode {
+            // If the found metadata is equal to the QR code metadata then update the status label's text and set the bounds
+            let barCodeObject = videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
+            qrCodeFrameView?.frame = barCodeObject.bounds
             
-            // Check if the metadataObjects array is not nil and it contains at least one object.
-            if metadataObjects == nil || metadataObjects.count == 0 {
-                qrCodeFrameView?.frame = CGRectZero
-                messageLabel.text = "Coloque el codigo QR en el marco azul"
-                return
-            }
-            
-            // Get the metadata object.
-            let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-            
-            if metadataObj.type == AVMetadataObjectTypeQRCode {
-                // If the found metadata is equal to the QR code metadata then update the status label's text and set the bounds
-                let barCodeObject = videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
-                qrCodeFrameView?.frame = barCodeObject.bounds;
-                
-                if metadataObj.stringValue != nil {
-                    messageLabel.text = metadataObj.stringValue
-                }
+            if metadataObj.stringValue != nil {
+                messageLabel.text = "Asistencia de "+metadataObj.stringValue.componentsSeparatedByString(",")[1]+" registrada"
             }
         }
     }
 
     override func didReceiveMemoryWarning() {
+        
+        
+        
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
